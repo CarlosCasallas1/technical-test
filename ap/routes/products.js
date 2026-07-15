@@ -30,6 +30,7 @@ router.get('/:id', (req, res) => {
         res.status(500).json({ message: 'Error interno del servidor' });
     }
 });
+
 // POST /products - Crear producto
 router.post('/', (req, res) => {
     try {
@@ -57,12 +58,18 @@ router.post('/', (req, res) => {
 
         products.push(newProduct);
 
-        res.status(201).json(newProduct);
+        res.status(201).json({
+            message: 'Producto creado correctamente',
+            product: newProduct
+        });
 
     } catch (error) {
-        res.status(500).json({ message: 'Error interno del servidor' });
+        res.status(500).json({
+            message: 'Error interno del servidor'
+        });
     }
 });
+
 
 // PUT /products/:id - Actualizar producto
 router.put('/:id', (req, res) => {
@@ -94,10 +101,15 @@ router.put('/:id', (req, res) => {
         product.descr = descr;
         product.price = price;
 
-        res.status(200).json(product);
+        res.status(200).json({
+            message: 'Producto actualizado correctamente',
+            product
+        });
 
     } catch (error) {
-        res.status(500).json({ message: 'Error interno del servidor' });
+        res.status(500).json({
+            message: 'Error interno del servidor'
+        });
     }
 });
 
@@ -110,16 +122,21 @@ router.delete('/:id', (req, res) => {
         const index = products.findIndex(p => p.id === id);
 
         if (index === -1) {
-            return res.status(404).json({ message: 'Producto no encontrado' });
+            return res.status(404).json({
+                message: 'Producto no encontrado'
+            });
         }
 
         products.splice(index, 1);
 
-        res.status(200).json({ message: 'Producto eliminado' });
+        res.status(200).json({
+            message: 'Producto eliminado correctamente'
+        });
 
     } catch (error) {
-        res.status(500).json({ message: 'Error interno del servidor' });
+        res.status(500).json({
+            message: 'Error interno del servidor'
+        });
     }
 });
-
 module.exports = router;	
