@@ -30,11 +30,22 @@ router.get('/:id', (req, res) => {
         res.status(500).json({ message: 'Error interno del servidor' });
     }
 });
-
 // POST /products - Crear producto
 router.post('/', (req, res) => {
     try {
         const { name, descr, price } = req.body;
+
+        if (!name || !descr || price === undefined) {
+            return res.status(400).json({
+                message: 'Todos los campos son obligatorios'
+            });
+        }
+
+        if (price <= 0) {
+            return res.status(400).json({
+                message: 'El precio debe ser mayor que cero'
+            });
+        }
 
         const newProduct = {
             id: products.length + 1,
@@ -62,7 +73,21 @@ router.put('/:id', (req, res) => {
         const product = products.find(p => p.id === id);
 
         if (!product) {
-            return res.status(404).json({ message: 'Producto no encontrado' });
+            return res.status(404).json({
+                message: 'Producto no encontrado'
+            });
+        }
+
+        if (!name || !descr || price === undefined) {
+            return res.status(400).json({
+                message: 'Todos los campos son obligatorios'
+            });
+        }
+
+        if (price <= 0) {
+            return res.status(400).json({
+                message: 'El precio debe ser mayor que cero'
+            });
         }
 
         product.name = name;
@@ -75,6 +100,7 @@ router.put('/:id', (req, res) => {
         res.status(500).json({ message: 'Error interno del servidor' });
     }
 });
+
 
 // DELETE /products/:id - Eliminar producto
 router.delete('/:id', (req, res) => {
