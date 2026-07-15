@@ -1,28 +1,99 @@
 const express = require('express');
 const router = express.Router();
+
+
 let products = [];
 
-// GET /products - Get all products
+// GET /products - Obtener todos los productos
 router.get('/', (req, res) => {
-    res.status(200).json(products);
+    try {
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
 });
 
-// POST /products - Create product
+// GET /products/:id - Obtener un producto por ID
+router.get('/:id', (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+
+        const product = products.find(p => p.id === id);
+
+        if (!product) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+
+        res.status(200).json(product);
+
+    } catch (error) {
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+});
+
+// POST /products - Crear producto
 router.post('/', (req, res) => {
-    const { name, descr, price } = req.body;
-    const newProduct = {
-        id: products.length + 1,
-        name,
-        descr,
-        price,
-        creationDate: new Date()
-    };
-    products.push(newProduct);
-    res.status(201).json(newProduct);
+    try {
+        const { name, descr, price } = req.body;
+
+        const newProduct = {
+            id: products.length + 1,
+            name,
+            descr,
+            price,
+            creationDate: new Date()
+        };
+
+        products.push(newProduct);
+
+        res.status(201).json(newProduct);
+
+    } catch (error) {
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
 });
 
-/**
- * Were missing some routes here...
- */
+// PUT /products/:id - Actualizar producto
+router.put('/:id', (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const { name, descr, price } = req.body;
 
-module.exports = router;
+        const product = products.find(p => p.id === id);
+
+        if (!product) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+
+        product.name = name;
+        product.descr = descr;
+        product.price = price;
+
+        res.status(200).json(product);
+
+    } catch (error) {
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+});
+
+// DELETE /products/:id - Eliminar producto
+router.delete('/:id', (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+
+        const index = products.findIndex(p => p.id === id);
+
+        if (index === -1) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+
+        products.splice(index, 1);
+
+        res.status(200).json({ message: 'Producto eliminado' });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+});
+
+module.exports = router;	
