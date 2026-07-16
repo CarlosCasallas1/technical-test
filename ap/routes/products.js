@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const Product = require('../models/Product');
 
 let products = [];
 
@@ -48,13 +48,14 @@ router.post('/', (req, res) => {
             });
         }
 
-        const newProduct = {
-            id: products.length + 1,
-            name,
-            descr,
-            price,
-            creationDate: new Date()
-        };
+        const newProduct = new Product(
+
+             products.length + 1,
+    name,
+    descr,
+    price,
+    new Date()
+        );
 
         products.push(newProduct);
 
